@@ -6,6 +6,10 @@
 <meta name="theme-color" content="#087a4b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Tá em dúvida?">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <title>Tá em dúvida? Procure aqui.</title>
 <style>
 :root{--g:#087a4b;--g2:#0ca665;--o:#ff7418;--ink:#15221c;--muted:#68746d;--bg:#f5f8f6;--card:#fff;--line:#e0e8e3}
@@ -69,6 +73,24 @@ function toast(t){let x=document.getElementById('toast');x.textContent=t;x.class
 function buscar(){let q=document.getElementById('search').value.trim(),c=document.getElementById('city').value.trim();if(!q&&!c){toast('Digite um estabelecimento ou cidade.');return}openMenu('resultado')}
 function locationNow(){if(!navigator.geolocation){toast('Localização não disponível.');return}toast('Solicitando localização…');navigator.geolocation.getCurrentPosition(()=>toast('Localização recebida. A busca online será feita nesta cidade.'),()=>toast('Não foi possível acessar sua localização.'))}
 function closeModal(){document.getElementById('modal').style.display='none'}
+async function handleChoice(label){
+  if(label==='Compartilhar aplicativo'){
+    const url=window.location.href.split('#')[0];
+    const data={title:'Tá em dúvida? Procure aqui.',text:'Confira este aplicativo:',url};
+    try{
+      if(navigator.share){await navigator.share(data);return;}
+      await navigator.clipboard.writeText(url);
+      toast('🔗 Link copiado. Agora é só enviar.');
+    }catch(e){
+      try{
+        await navigator.clipboard.writeText(url);
+        toast('🔗 Link copiado. Agora é só enviar.');
+      }catch(err){toast('Não foi possível compartilhar agora.');}
+    }
+    return;
+  }
+  toast(label);
+}
 function openMenu(type){
  let title='',text='',items=[];
  if(type==='comer'){title='Quero comer';text='Escolha o que deseja encontrar.';items=[['🍽️','Restaurantes'],['🍔','Lanchonetes'],['🍕','Pizzarias'],['🥖','Padarias'],['☕','Cafés']]}
@@ -76,11 +98,14 @@ function openMenu(type){
  if(type==='escolha'){title='Escolha por mim';text='Na próxima etapa você poderá informar cidade, cartão e orçamento.';items=[['📍','Escolher cidade'],['💳','Escolher cartão'],['💰','Definir orçamento']]}
  if(type==='viagem'){title='Vou viajar';text='Consulte estabelecimentos antes de chegar ao destino.';items=[['📍','Escolher destino'],['💳','Meu cartão'],['🔎','Pesquisar estabelecimentos']]}
  if(type==='favoritos'){title='Favoritos';text='Seus estabelecimentos salvos aparecerão aqui.';items=[['♡','Meus favoritos']]}
- if(type==='mais'){title='Mais opções';text='Configurações e informações do aplicativo.';items=[['⚙️','Configurações'],['ℹ️','Sobre o aplicativo'],['🔒','Termos e privacidade']]}
+ if(type==='mais'){title='Mais opções';text='Configurações e informações do aplicativo.';items=[['🔗','Compartilhar aplicativo'],['⚙️','Configurações'],['ℹ️','Sobre o aplicativo'],['🔒','Termos e privacidade']]}
  if(type==='resultado'){title='Sua pesquisa';text='A próxima etapa conecta a pesquisa às fontes online e mostra resultados, cidade, cartões aceitos, preços, fonte e data.';items=[['🔎',document.getElementById('search').value||'Pesquisar'],['📍',document.getElementById('city').value||'Qualquer cidade']]}
- document.getElementById('sheet').innerHTML='<div class="top"><b>Tá em dúvida?</b><button class="close" onclick="closeModal()">×</button></div><h2>'+title+'</h2><p>'+text+'</p><div class="choices">'+items.map(x=>'<button class="choice" onclick="toast(\\''+x[1].replace(/'/g," ")+'\\')"><span style="margin-right:10px">'+x[0]+'</span><b>'+x[1]+'</b><span>›</span></button>').join('')+'</div>';
+ document.getElementById('sheet').innerHTML='<div class="top"><b>Tá em dúvida?</b><button class="close" onclick="closeModal()">×</button></div><h2>'+title+'</h2><p>'+text+'</p><div class="choices">'+items.map(x=>'<button class="choice" onclick="handleChoice(\\''+x[1].replace(/'/g," ")+'\\')"><span style="margin-right:10px">'+x[0]+'</span><b>'+x[1]+'</b><span>›</span></button>').join('')+'</div>';
  document.getElementById('modal').style.display='flex'
 }
+</script>
+<script>
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(()=>{})); }
 </script>
 </body>
 </html>
