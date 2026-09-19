@@ -8,8 +8,6 @@
 <meta name="apple-mobile-web-app-title" content="Tá em dúvida?">
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-<link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <title>Tá em dúvida? Procure aqui.</title>
 <style>
 :root{--g:#087a4b;--g2:#0ca665;--o:#ff7418;--ink:#15221c;--muted:#68746d;--bg:#f5f8f6;--card:#fff;--line:#e0e8e3}
@@ -22,7 +20,8 @@ button,input{font:inherit}button{cursor:pointer;border:0}.app{max-width:520px;mi
 .subtitle{margin:20px 0 0;font-size:15px;line-height:1.4;color:#effcf5}
 .content{padding:18px 16px}
 .search{display:flex;gap:7px;background:#fff;padding:7px;border-radius:17px;box-shadow:0 7px 22px #143b2b12;border:1px solid var(--line)}
-.search input{min-width:0;flex:1;border:0;outline:0;padding:11px 8px;color:var(--ink)}.search button{background:var(--g);color:#fff;border-radius:12px;padding:0 15px;font-weight:800}
+.search input{min-width:0;flex:1;border:0;outline:0;padding:11px 8px;color:var(--ink)}
+.searchActions{display:flex;gap:6px;align-items:center}.search button{background:var(--g);color:#fff;border-radius:12px;padding:0 15px;font-weight:800}.mic{width:44px;padding:0!important;background:#edf8f2!important;color:var(--g)!important;font-size:22px;display:grid;place-items:center}.mic.listening{background:#ffe9e2!important;color:#d94b24!important}
 .where{margin-top:10px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:13px;display:flex;align-items:center;gap:8px}.where input{border:0;outline:0;flex:1;min-width:0;font-weight:700;background:transparent}.gps{background:#edf8f2;color:var(--g);border-radius:11px;padding:8px 10px;font-weight:800}
 .hint{text-align:center;color:var(--muted);font-size:11px;margin:12px 0 19px}
 .menu{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 5px 20px #143b2b0b}
@@ -41,7 +40,13 @@ button,input{font:inherit}button{cursor:pointer;border:0}.app{max-width:520px;mi
  <div class="subtitle">Encontre o que precisa em qualquer cidade do Brasil.</div>
 </header>
 <main class="content">
- <div class="search"><input id="search" placeholder="O que você procura?" autocomplete="off"><button onclick="buscar()">Buscar</button></div>
+ <div class="search">
+  <input id="search" placeholder="O que você procura?" autocomplete="off" enterkeyhint="search">
+  <div class="searchActions">
+   <button type="button" class="mic" id="micBtn" onclick="falarPesquisa()" aria-label="Pesquisar por voz">🎙️</button>
+   <button type="button" onclick="buscar()">Buscar</button>
+  </div>
+ </div>
  <div class="where">📍 <input id="city" placeholder="Digite a cidade (opcional)"><button class="gps" onclick="locationNow()">◎</button></div>
  <div class="hint">Você pode pesquisar pelo nome do estabelecimento ou pela cidade.</div>
 
@@ -63,15 +68,55 @@ button,input{font:inherit}button{cursor:pointer;border:0}.app{max-width:520px;mi
 </div>
 </main>
 <nav class="bottom">
- <button class="nav active"><b>⌂</b>Início</button><button class="nav" onclick="abrirBusca(event)"><b>⌕</b>Buscar</button><button class="nav" onclick="openMenu('favoritos')"><b>♡</b>Favoritos</button><button class="nav" onclick="openMenu('viagem')"><b>✈</b>Viagens</button><button class="nav" onclick="openMenu('mais')"><b>☰</b>Mais</button>
+ <button type="button" class="nav active"><b>⌂</b>Início</button><button class="nav" onclick="openMenu('favoritos')"><b>♡</b>Favoritos</button><button class="nav" onclick="openMenu('viagem')"><b>✈</b>Viagens</button><button class="nav" onclick="openMenu('mais')"><b>☰</b>Mais</button>
 </nav>
 </div>
 <div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="sheet" id="sheet"></div></div>
 <div class="toast" id="toast"></div>
 <script>
 function toast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2300)}
-function abrirBusca(e){if(e)e.preventDefault();const input=document.getElementById('search');input.focus({preventScroll:true});input.scrollIntoView({behavior:'smooth',block:'center'});}
-function buscar(){let q=document.getElementById('search').value.trim(),c=document.getElementById('city').value.trim();if(!q&&!c){abrirBusca();toast('Digite um estabelecimento ou cidade.');return}openMenu('resultado')}
+function abrirBusca(){const input=document.getElementById('search');if(!input)return;window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>{input.focus();try{input.setSelectionRange(input.value.length,input.value.length);}catch(_){}},180);}
+async function buscar(){
+ const q=document.getElementById('search').value.trim(), c=document.getElementById('city').value.trim();
+ if(!q&&!c){abrirBusca();toast('Digite um estabelecimento ou uma cidade.');return}
+ const query=[q,c].filter(Boolean).join(', ');
+ const url='https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=12&countrycodes=br&q='+encodeURIComponent(query);
+ const btn=document.querySelector('.search button:not(.mic)');
+ if(btn){btn.disabled=true;btn.textContent='Buscando…';}
+ try{
+   const res=await fetch(url,{headers:{'Accept':'application/json'}});
+   if(!res.ok)throw new Error('http');
+   const data=await res.json();
+   mostrarResultados(q,c,data);
+ }catch(e){
+   document.getElementById('sheet').innerHTML='<div class="top"><b>Tá em dúvida?</b><button class="close" onclick="closeModal()">×</button></div><h2>Pesquisa</h2><p>Não foi possível consultar os resultados agora. Verifique sua internet e tente novamente.</p><div class="choices"><button class="choice" onclick="closeModal();abrirBusca()"><span style="margin-right:10px">🔎</span><b>Tentar novamente</b><span>›</span></button></div>';
+   document.getElementById('modal').style.display='flex';
+ }finally{if(btn){btn.disabled=false;btn.textContent='Buscar';}}
+}
+function mostrarResultados(q,c,data){
+ window.__resultados=data||[];
+ const title=q||c||'Pesquisa';
+ let html='<div class="top"><b>Tá em dúvida?</b><button class="close" onclick="closeModal()">×</button></div><h2>Resultados</h2><p>Pesquisa por <strong>'+esc(title)+'</strong>'+(c?' em <strong>'+esc(c)+'</strong>':'')+'.</p><div class="choices">';
+ if(!data.length){html+='<div class="choice"><span style="margin-right:10px">🔎</span><b>Nenhum resultado encontrado no momento.</b></div>'}
+ else data.forEach((x,i)=>{html+='<button class="choice" onclick="abrirResultadoPorIndice('+i+')"><span style="margin-right:10px">'+(x.type==='city'||x.type==='town'||x.type==='village'?'📍':'🏪')+'</span><b>'+esc(x.display_name||'Resultado')+'</b><span>›</span></button>'});
+ html+='</div><p style="font-size:10px;margin-top:12px">Fonte: OpenStreetMap/Nominatim. Os resultados podem variar e devem ser confirmados.</p>';
+ document.getElementById('sheet').innerHTML=html;document.getElementById('modal').style.display='flex';
+}
+function esc(v){return String(v).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function abrirResultadoPorIndice(i){const x=(window.__resultados||[])[i];if(!x)return;abrirResultado(x.display_name||'Resultado',x.lat||'',x.lon||'')}
+function abrirResultado(name,lat,lon){if(lat&&lon){window.open('https://www.openstreetmap.org/?mlat='+encodeURIComponent(lat)+'&mlon='+encodeURIComponent(lon)+'#map=18/'+encodeURIComponent(lat)+'/'+encodeURIComponent(lon),'_blank');}else{toast(name)}}
+function falarPesquisa(){
+ const input=document.getElementById('search'), btn=document.getElementById('micBtn');
+ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SpeechRecognition){input.focus();toast('🎙️ Use o microfone do teclado para falar.');return}
+ if(window.__recognition){try{window.__recognition.stop();}catch(_){}return}
+ const r=new SpeechRecognition(); window.__recognition=r; r.lang='pt-BR'; r.interimResults=false; r.continuous=false; r.maxAlternatives=1;
+ btn.classList.add('listening'); btn.textContent='🔴'; toast('🎙️ Pode falar o que procura…');
+ r.onresult=e=>{input.value=(e.results[0][0].transcript||'').trim(); input.focus();};
+ r.onerror=e=>{toast(e.error==='not-allowed'?'Permita o microfone para pesquisar por voz.':'Não consegui entender. Tente novamente.');};
+ r.onend=()=>{btn.classList.remove('listening');btn.textContent='🎙️';window.__recognition=null;};
+ try{r.start();}catch(e){btn.classList.remove('listening');btn.textContent='🎙️';window.__recognition=null;input.focus();toast('🎙️ Use o microfone do teclado para falar.');}
+}
 function locationNow(){if(!navigator.geolocation){toast('Localização não disponível.');return}toast('Solicitando localização…');navigator.geolocation.getCurrentPosition(()=>toast('Localização recebida. A busca online será feita nesta cidade.'),()=>toast('Não foi possível acessar sua localização.'))}
 function closeModal(){document.getElementById('modal').style.display='none'}
 async function handleChoice(label){
