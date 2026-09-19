@@ -63,14 +63,15 @@ button,input{font:inherit}button{cursor:pointer;border:0}.app{max-width:520px;mi
 </div>
 </main>
 <nav class="bottom">
- <button class="nav active"><b>⌂</b>Início</button><button class="nav" onclick="buscar()"><b>⌕</b>Buscar</button><button class="nav" onclick="openMenu('favoritos')"><b>♡</b>Favoritos</button><button class="nav" onclick="openMenu('viagem')"><b>✈</b>Viagens</button><button class="nav" onclick="openMenu('mais')"><b>☰</b>Mais</button>
+ <button class="nav active"><b>⌂</b>Início</button><button class="nav" onclick="abrirBusca(event)"><b>⌕</b>Buscar</button><button class="nav" onclick="openMenu('favoritos')"><b>♡</b>Favoritos</button><button class="nav" onclick="openMenu('viagem')"><b>✈</b>Viagens</button><button class="nav" onclick="openMenu('mais')"><b>☰</b>Mais</button>
 </nav>
 </div>
 <div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="sheet" id="sheet"></div></div>
 <div class="toast" id="toast"></div>
 <script>
 function toast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2300)}
-function buscar(){let q=document.getElementById('search').value.trim(),c=document.getElementById('city').value.trim();if(!q&&!c){toast('Digite um estabelecimento ou cidade.');return}openMenu('resultado')}
+function abrirBusca(e){if(e)e.preventDefault();const input=document.getElementById('search');input.focus({preventScroll:true});input.scrollIntoView({behavior:'smooth',block:'center'});}
+function buscar(){let q=document.getElementById('search').value.trim(),c=document.getElementById('city').value.trim();if(!q&&!c){abrirBusca();toast('Digite um estabelecimento ou cidade.');return}openMenu('resultado')}
 function locationNow(){if(!navigator.geolocation){toast('Localização não disponível.');return}toast('Solicitando localização…');navigator.geolocation.getCurrentPosition(()=>toast('Localização recebida. A busca online será feita nesta cidade.'),()=>toast('Não foi possível acessar sua localização.'))}
 function closeModal(){document.getElementById('modal').style.display='none'}
 async function handleChoice(label){
