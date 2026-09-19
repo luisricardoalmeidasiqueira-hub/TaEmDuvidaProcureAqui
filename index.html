@@ -100,7 +100,7 @@ function openMenu(type){
  if(type==='favoritos'){title='Favoritos';text='Seus estabelecimentos salvos aparecerão aqui.';items=[['♡','Meus favoritos']]}
  if(type==='mais'){title='Mais opções';text='Configurações e informações do aplicativo.';items=[['🔗','Compartilhar aplicativo'],['⚙️','Configurações'],['ℹ️','Sobre o aplicativo'],['🔒','Termos e privacidade']]}
  if(type==='resultado'){title='Sua pesquisa';text='A próxima etapa conecta a pesquisa às fontes online e mostra resultados, cidade, cartões aceitos, preços, fonte e data.';items=[['🔎',document.getElementById('search').value||'Pesquisar'],['📍',document.getElementById('city').value||'Qualquer cidade']]}
- document.getElementById('sheet').innerHTML='<div class="top"><b>Tá em dúvida?</b><button class="close" onclick="closeModal()">×</button></div><h2>'+title+'</h2><p>'+text+'</p><div class="choices">'+items.map(x=>'<button class="choice" onclick="handleChoice(\\''+x[1].replace(/'/g," ")+'\\')"><span style="margin-right:10px">'+x[0]+'</span><b>'+x[1]+'</b><span>›</span></button>').join('')+'</div>';
+ document.getElementById('sheet').innerHTML='<div class="top"><b>Tá em dúvida?</b><button class="close" onclick="closeModal()">×</button></div><h2>'+title+'</h2><p>'+text+'</p><div class="choices">'+items.map(x=>'<button class="choice" onclick="handleChoice(\''+x[1].replace(/'/g," ")+'\')"><span style="margin-right:10px">'+x[0]+'</span><b>'+x[1]+'</b><span>›</span></button>').join('')+'</div>';
  document.getElementById('modal').style.display='flex'
 }
 </script>
