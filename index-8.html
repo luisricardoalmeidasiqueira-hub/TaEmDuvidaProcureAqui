@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#087a4b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tá em dúvida?">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<title>Tá em dúvida? Procure aqui.</title>
+<style>
+:root{--g:#087a4b;--g2:#0ca665;--o:#ff7418;--ink:#15221c;--muted:#68746d;--bg:#f5f8f6;--card:#fff;--line:#e0e8e3}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+button,input{font:inherit}button{cursor:pointer;border:0}.app{max-width:520px;min-height:100vh;margin:auto;background:var(--bg);padding-bottom:76px}
+.hero{color:#fff;background:linear-gradient(145deg,#04552f,#087a4b 58%,#0dac68);padding:38px 20px 28px;border-radius:0 0 30px 30px;position:relative;overflow:hidden}
+.hero:after{content:"🍴  🛒";position:absolute;right:10px;bottom:8px;font-size:42px;opacity:.13}
+.logo{width:58px;height:58px;border-radius:19px;background:#fff;display:grid;place-items:center;font-size:31px;box-shadow:0 8px 24px #003d2638}
+.brand{display:flex;align-items:center;gap:13px}.brand h1{margin:0;font-size:28px;line-height:1.02;letter-spacing:-1px}.brand h1 span{color:#ff9a50}.brand p{margin:5px 0 0;font-size:12px;color:#e4faef}
+.subtitle{margin:20px 0 0;font-size:15px;line-height:1.4;color:#effcf5}
+.content{padding:18px 16px}
+.search{display:flex;gap:7px;background:#fff;padding:7px;border-radius:17px;box-shadow:0 7px 22px #143b2b12;border:1px solid var(--line)}
+.search input{min-width:0;flex:1;border:0;outline:0;padding:11px 8px;color:var(--ink)}
+.searchActions{display:flex;gap:6px;align-items:center}.search button{background:var(--g);color:#fff;border-radius:12px;padding:0 15px;font-weight:800}.clear{width:38px;padding:0!important;background:#f1f4f2!important;color:#6f7973!important;font-size:19px;display:grid;place-items:center}.mic{width:44px;padding:0!important;background:#edf8f2!important;color:var(--g)!important;font-size:22px;display:grid;place-items:center}.mic.listening{background:#ffe9e2!important;color:#d94b24!important}
+.where{margin-top:10px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:13px;display:flex;align-items:center;gap:8px}.where input{border:0;outline:0;flex:1;min-width:0;font-weight:700;background:transparent}.gps{background:#edf8f2;color:var(--g);border-radius:11px;padding:8px 10px;font-weight:800}
+.fchip{display:inline-flex;align-items:center;gap:8px;margin-top:10px;background:#fff8e8;border:1px solid #f1dfad;color:#66542b;border-radius:99px;padding:6px 8px 6px 12px;font-size:13px}.fchip button{width:24px;height:24px;border-radius:50%;background:#f1dfad;color:#66542b;font-size:13px}
+.hint{text-align:center;color:var(--muted);font-size:11px;margin:12px 0 19px}
+.menu{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 5px 20px #143b2b0b}
+.item{width:100%;background:#fff;display:flex;align-items:center;text-align:left;padding:17px 15px;border-bottom:1px solid var(--line);gap:13px}.item:last-child{border-bottom:0}.ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:24px;flex:0 0 44px}.food{background:#fff0e5}.card{background:#e8f8ef}.dice{background:#f1ebff}.itemText{flex:1}.itemText b{display:block;font-size:16px}.itemText span{display:block;color:var(--muted);font-size:11px;margin-top:3px}.arrow{font-size:25px;color:#8a948e}
+.extra{margin-top:14px}.extra button{width:100%;background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px;text-align:left;display:flex;align-items:center;gap:10px;color:#405048;font-weight:700}.extra button span:last-child{margin-left:auto;color:#8a948e;font-size:22px}
+.legal{margin:18px 5px 0;color:#7a857f;font-size:10px;line-height:1.45;text-align:center}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);height:68px;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:7px 4px calc(7px + env(safe-area-inset-bottom));z-index:10}.nav{background:none;color:#77817c;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:2px}.nav b{font-size:22px;line-height:23px}.nav.active{color:var(--g)}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:20;align-items:flex-end}.sheet{width:min(520px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:25px 25px 0 0;padding:18px;margin:auto auto 0}.top{display:flex;justify-content:space-between;align-items:center}.close{width:38px;height:38px;border-radius:50%;background:#edf2ef;font-size:22px}.close.back{width:auto;padding:0 14px;font-size:14px;font-weight:800;color:var(--g)}.sheet h2{font-size:23px;margin:18px 0 5px}.sheet p{color:var(--muted);font-size:13px;line-height:1.45}.choices{display:grid;gap:9px;margin-top:15px}.choice{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px;display:flex;align-items:center;text-align:left}.choice b{flex:1}.choice span{font-size:22px;color:#8a948e}
+.res{width:100%;background:#fff;border:1px solid var(--line);border-radius:15px;padding:13px;text-align:left;display:block}.res .n{display:flex;gap:9px;align-items:center}.res .n b{flex:1;font-size:15px}.res .n em{font-style:normal;font-size:12px;color:var(--muted);white-space:nowrap}.res .sub{color:var(--muted);font-size:11px;margin-top:4px;line-height:1.35}
+.pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}.pill{font-size:11px;font-weight:800;border-radius:99px;padding:4px 9px;background:#f1f4f2;color:#6f7973}.pill.yes{background:#dff5e8;color:#066b41}.pill.me{box-shadow:inset 0 0 0 2px #ff9a50}
+.aviso{background:#fff8e8;border:1px solid #f1dfad;border-radius:14px;padding:11px;font-size:12px;color:#66542b;margin:10px 0;line-height:1.45}
+.tog{background:#edf8f2;color:var(--g);border-radius:12px;padding:9px 13px;font-weight:800;font-size:13px;margin-top:8px}
+.secao{font-weight:800;font-size:14px;margin:18px 0 2px}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.chip{display:flex;align-items:center;gap:8px;padding:10px;border-radius:13px;border:1px solid var(--line);background:#fff;text-align:left;font-weight:700;font-size:13px;color:var(--ink)}.chip small{display:block;font-weight:500;font-size:10px;color:var(--muted);margin-top:2px}.chip.yes{background:#e8f8ef;border-color:#9fdcbb}.chip.no{background:#fff0ec;border-color:#f3b8a8}
+.act{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.act a,.act button{flex:1 1 44%;text-align:center;background:#edf8f2;color:var(--g);border-radius:13px;padding:12px 8px;font-weight:800;font-size:13px;text-decoration:none}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}.seg button{flex:1 1 auto;min-width:62px;background:#f1f4f2;color:#55605a;border-radius:12px;padding:10px 6px;font-weight:800;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.seg button.on{background:var(--g);color:#fff}
+.grp{display:flex;justify-content:space-between;align-items:baseline;margin:20px 2px 0;font-weight:800;font-size:15px}.grp span{font-weight:600;font-size:12px;color:var(--muted)}
+.mais{width:100%;margin-top:12px;background:#edf8f2;color:var(--g);border-radius:13px;padding:13px;font-weight:800}
+.res .n b{overflow-wrap:anywhere}.res .sub{font-size:12px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}.tag{display:inline-flex;align-items:center;gap:6px;background:#e8f8ef;border:1px solid #9fdcbb;color:#066b41;border-radius:99px;padding:6px 6px 6px 12px;font-size:13px;font-weight:700}.tag button{width:22px;height:22px;border-radius:50%;background:#c9ecd8;color:#066b41;font-size:12px}
+.add{display:flex;gap:8px;margin-top:10px}.add input,.nota{border:1px solid var(--line);border-radius:13px;padding:11px;outline:0;background:#fff;color:var(--ink);min-width:0;flex:1;width:100%}.add button{background:var(--g);color:#fff;border-radius:13px;padding:0 16px;font-weight:800}.nota{display:block;min-height:70px;resize:vertical;font:inherit;font-size:13px}
+.toast{position:fixed;left:50%;bottom:82px;transform:translate(-50%,15px);background:#17221c;color:#fff;border-radius:13px;padding:11px 15px;font-size:12px;opacity:0;pointer-events:none;transition:.25s;z-index:30}.toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="hero">
+ <div class="brand"><div class="logo">🍴</div><div><h1>Tá em <span>dúvida?</span><br>Procure aqui.</h1><p>Comida, mercados, cartões e muito mais.</p></div></div>
+ <div class="subtitle">Encontre o que precisa em qualquer cidade do Brasil.</div>
+</header>
+<main class="content">
+ <div class="search">
+  <input id="search" placeholder="Nome do lugar (opcional)" autocomplete="off" enterkeyhint="search">
+  <div class="searchActions">
+   <button type="button" class="clear" id="clearBtn" onclick="limparPesquisa()" aria-label="Apagar pesquisa" title="Apagar">✕</button>
+   <button type="button" class="mic" id="micBtn" onclick="falarPesquisa()" aria-label="Pesquisar por voz">🎙️</button>
+   <button type="button" onclick="buscar()">Buscar</button>
+  </div>
+ </div>
+ <div class="where">📍 <input id="city" placeholder="Digite a cidade" enterkeyhint="search"><button class="gps" onclick="locationNow()" aria-label="Usar minha localização">◎</button></div>
+ <div id="filtro"></div>
+ <div class="hint">Digite a cidade (ou toque em ◎) e pesquise pelo nome do lugar.</div>
+
+ <div class="menu">
+  <button class="item" onclick="openMenu('comer')"><div class="ico food">🍽️</div><div class="itemText"><b>Quero comer</b><span>Restaurantes, lanchonetes, padarias e mais.</span></div><div class="arrow">›</div></button>
+  <button class="item" onclick="openMenu('cartao')"><div class="ico card">💳</div><div class="itemText"><b>Onde aceita meu cartão?</b><span>Descubra onde usar VR, Ticket, Pluxee, Alelo e outros.</span></div><div class="arrow">›</div></button>
+  <button class="item" onclick="openMenu('escolha')"><div class="ico dice">🎲</div><div class="itemText"><b>Escolha por mim</b><span>Informe cidade e cartão, o app sorteia um lugar.</span></div><div class="arrow">›</div></button>
+ </div>
+
+ <div class="extra">
+  <button onclick="openMenu('viagem')"><span>✈️</span><span>Vou viajar</span><span>›</span></button>
+ </div>
+ <div class="legal">
+  As informações serão apresentadas com fonte e data quando disponíveis. Preços, horários e aceitação de cartões podem mudar; confirme no estabelecimento.
+  <br><br>
+  <strong>© 2026 Luís Ricardo de Almeida Siqueira — Todos os direitos reservados.</strong>
+  <br>
+  <span style="opacity:.75">Versão 1.4</span>
+</div>
+</main>
+<nav class="bottom">
+ <button type="button" class="nav active"><b>⌂</b>Início</button><button class="nav" onclick="openMenu('favoritos')"><b>♡</b>Favoritos</button><button class="nav" onclick="openMenu('viagem')"><b>✈</b>Viagens</button><button class="nav" onclick="openMenu('mais')"><b>☰</b>Mais</button>
+</nav>
+</div>
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+function toast(t){const x=$('toast');x.textContent=t;x.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>x.classList.remove('show'),2600)}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function topBar(){return '<div class="top"><b>Tá em dúvida?</b><button class="close" type="button" onclick="closeModal()">×</button></div>'}
+function showSheet(title,text,items=[]){
+ const rows=items.map(x=>`<button class="choice" type="button" onclick="${x.action}"><span style="margin-right:10px">${x.icon||'›'}</span><b>${esc(x.label)}</b><span>›</span></button>`).join('');
+ window.__view='outro';$('sheet').innerHTML=`${topBar()}<h2>${esc(title)}</h2><p>${text}</p><div class="choices">${rows}</div>`;
+ $('modal').style.display='flex';
+}
+function abrirBusca(){const input=$('search');if(!input)return;closeModal();window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>{input.focus();input.setSelectionRange(input.value.length,input.value.length)},180)}
+function closeModal(){window.__view='fechado';$('modal').style.display='none'}
+
+/* ---------- Armazenamento local (marcações e favoritos) ---------- */
+const LS={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let MARCAS=LS.get('ted_marcas',{});   // { idDoLugar: { 'Ticket':'yes'|'no', ... } }
+let FAVS=LS.get('ted_favs',{});       // { idDoLugar: lugar }
+let EXTRAS=LS.get('ted_extras',{});   // { idDoLugar: { outros:['Ben',...], nota:'texto' } }
+function chave(p){return p&&p.seed&&p.seed.id?p.seed.id:p.id}
+window.__escopo=(v=>(v==='cidade'||[30,60,100,150].includes(v))?v:'cidade')(LS.get('ted_escopo','cidade'));
+
+/* ---------- Cartões: nome, ícone e como aparece nas etiquetas payment:* do OpenStreetMap ---------- */
+const CARDS=[
+ {n:'VR',i:'💳',k:/(^|[_-])vr($|[_-])/i},
+ {n:'VA',i:'💳',k:/(^|[_-])va($|[_-])|vale_?alimenta|food_?voucher/i},
+ {n:'Alelo',i:'🟢',k:/alelo/i},
+ {n:'Ticket',i:'🔴',k:/ticket/i},
+ {n:'Pluxee',i:'🔵',k:/pluxee|sodexo/i},
+ {n:'iFood Benefícios',i:'🍴',k:/ifood/i},
+ {n:'Visa',i:'🟦',k:/^visa/i},
+ {n:'Mastercard',i:'🔴',k:/^(mastercard|maestro)/i},
+ {n:'Elo',i:'🟣',k:/^elo/i},
+ {n:'American Express',i:'💳',k:/^(american_?express|amex)/i},
+ {n:'Hipercard',i:'💳',k:/hipercard/i},
+ {n:'Diners Club',i:'💳',k:/^diners/i},
+ {n:'Discover',i:'💳',k:/^discover/i},
+ {n:'JCB',i:'💳',k:/^jcb/i},
+ {n:'UnionPay',i:'💳',k:/^unionpay/i}
+];
+function cardByName(n){return CARDS.find(c=>c.n===n)||null}
+
+/* ---------- Locais cadastrados com fonte ----------
+   Só entram aqui cartões que uma fonte informou de forma explícita para aquele lugar.
+   Formato de cartoes: { 'Nome do cartão': { s:'yes'|'no', n:'observação curta' } } */
+const LOCAIS=[
+ {id:'cad/coffe-marita-tatui',nome:'Coffe Marita Tatuí',cidade:'Tatuí',tipo:'Cafeteria',
+  rua:'Rua Antônio Henrique da Silva, 820',bairro:'Jardim das Garças',tel:'(15) 99687-2079',
+  cartoes:{Visa:{s:'yes',n:'débito'},Mastercard:{s:'yes',n:'débito'}},
+  outros:'Dinheiro, MóveisCard e Visa Vale Alimentação',
+  fonteCurta:'Solutudo',url:'https://www.solutudo.com.br/empresas/sp/tatui/cafeterias/coffe-marita-tatui-154064',data:'21/09/2026'},
+ {id:'cad/restaurante-do-camilo-tatui',nome:'Restaurante Do Camilo',cidade:'Tatuí',tipo:'Restaurante',
+  rua:'Avenida Coronel Firmo Vieira de Camargo, 531',bairro:'Centro',tel:'(15) 3259-2298',
+  cartoes:{},outros:'',
+  fonteCurta:'Solutudo',url:'https://www.solutudo.com.br/empresas/sp/tatui/restaurantes/restaurante-do-camilo-94715',data:'21/09/2026'}
+];
+const CAT_TIPO={Restaurantes:['Restaurante'],Lanchonetes:['Lanchonete'],Pizzarias:['Pizzaria'],Padarias:['Padaria'],'Cafés':['Café','Cafeteria'],Mercados:['Mercado','Conveniência']};
+function normNome(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim()}
+function juntarLocais(itens,cidades,cat,q){
+ const cs=cidades.map(normNome),nq=normNome(q);
+ LOCAIS.forEach(l=>{
+  if(!cs.includes(normNome(l.cidade)))return;
+  if(cat&&CAT_TIPO[cat]&&CAT_TIPO[cat].indexOf(l.tipo)<0)return;
+  const n=normNome(l.nome);
+  if(nq&&!nq.split(' ').every(w=>n.indexOf(w)>=0))return;
+  const achado=itens.find(p=>{const pn=normNome(p.name);return normNome(p.cidade)===normNome(l.cidade)&&(pn===n||(pn.length>=5&&n.indexOf(pn)>=0)||(n.length>=5&&pn.indexOf(n)>=0))});
+  if(achado){achado.seed=l;return}
+  itens.push({id:l.id,name:l.nome,kind:l.tipo,lat:null,lon:null,rua:l.rua||'',bairro:l.bairro||'',addr:[l.rua,l.bairro].filter(Boolean).join(' – '),hours:'',phone:l.tel||'',site:'',tags:{},cidade:l.cidade,d:null,seed:l});
+ });
+}
+function osmState(tags,card){
+ let r=null;
+ for(const k in (tags||{})){
+  if(k.indexOf('payment:')!==0)continue;
+  if(!card.k.test(k.slice(8)))continue;
+  const v=String(tags[k]).toLowerCase();
+  if(v==='yes'||v==='only')return 'yes';
+  if(v==='no')r='no';
+ }
+ return r;
+}
+function estado(p,card){
+ const m=(MARCAS[chave(p)]||{})[card.n];
+ if(m)return {s:m,src:'me'};
+ const sd=p.seed&&p.seed.cartoes&&p.seed.cartoes[card.n];
+ if(sd)return {s:sd.s,src:'seed',n:sd.n||''};
+ const o=osmState(p.tags,card);
+ return o?{s:o,src:'osm'}:{s:null,src:''};
+}
+function cartaoGeral(p){
+ const t=p.tags||{};
+ if(t['payment:credit_cards']==='yes'||t['payment:debit_cards']==='yes'||t['payment:cards']==='yes')return true;
+ return false;
+}
+
+/* ---------- Busca (OpenStreetMap: Nominatim para a cidade, Overpass para os lugares) ---------- */
+function accentRx(s){
+ const m={a:'aáàâãä',e:'eéèêë',i:'iíìîï',o:'oóòôõö',u:'uúùûü',c:'cç',n:'nñ'};
+ return s.toLowerCase().split('').map(ch=>m[ch]?'['+m[ch]+m[ch].toUpperCase()+']':(ch===' '?'.*':ch)).join('');
+}
+function catFilters(cat){
+ switch(cat){
+  case 'Restaurantes':return ['nwr["amenity"="restaurant"]'];
+  case 'Lanchonetes':return ['nwr["amenity"="fast_food"]'];
+  case 'Pizzarias':return ['nwr["amenity"~"^(restaurant|fast_food)$"]["cuisine"~"pizza"]'];
+  case 'Padarias':return ['nwr["shop"="bakery"]'];
+  case 'Cafés':return ['nwr["amenity"="cafe"]'];
+  case 'Mercados':return ['nwr["shop"~"^(supermarket|convenience)$"]'];
+  default:return ['nwr["amenity"~"^(restaurant|fast_food|cafe|food_court|bar|pub|ice_cream)$"]','nwr["shop"~"^(bakery|supermarket|convenience)$"]'];
+ }
+}
+function kindOf(t){
+ const A={restaurant:'Restaurante',fast_food:'Lanchonete',cafe:'Café',bar:'Bar',pub:'Bar',food_court:'Praça de alimentação',ice_cream:'Sorveteria'};
+ const S={bakery:'Padaria',supermarket:'Mercado',convenience:'Conveniência'};
+ if(/pizza/.test(t.cuisine||''))return 'Pizzaria';
+ return A[t.amenity]||S[t.shop]||'Estabelecimento';
+}
+function addrOf(t){
+ const rua=t['addr:street']?t['addr:street']+(t['addr:housenumber']?', '+t['addr:housenumber']:''):'';
+ return [rua,t['addr:suburb']||t['addr:neighbourhood']].filter(Boolean).join(' – ');
+}
+function onlyPay(t){const r={};for(const k in t){if(k.indexOf('payment:')===0)r[k]=t[k]}return r}
+function dist(a,b,c,d){const R=6371000,rad=x=>x*Math.PI/180,dl=rad(c-a),dn=rad(d-b);const h=Math.sin(dl/2)**2+Math.cos(rad(a))*Math.cos(rad(c))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+function fmtDist(d){return d<1000?Math.round(d)+' m':(d/1000).toFixed(1).replace('.',',')+' km'}
+
+async function geocodeCity(c){
+ const url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=br&addressdetails=1&q='+encodeURIComponent(c);
+ const r=await fetch(url,{headers:{Accept:'application/json'}});
+ if(!r.ok)throw new Error('nominatim');
+ const j=await r.json();
+ if(!j.length)return null;
+ const x=j[0],a=x.address||{},bb=(x.boundingbox||[]).map(Number);
+ const nome=a.city||a.town||a.municipality||a.village||x.name||c;
+ return {lat:+x.lat,lon:+x.lon,nome,label:a.state?nome+' – '+a.state:nome};
+}
+async function overpass(ql){
+ const eps=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
+ let err;
+ for(let volta=0;volta<2;volta++){
+  for(const ep of eps){
+   try{
+    const r=await fetch(ep,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'data='+encodeURIComponent(ql)});
+    if(!r.ok)throw new Error('overpass '+r.status);
+    return await r.json();
+   }catch(e){err=e}
+  }
+  await new Promise(r=>setTimeout(r,1500));
+ }
+ throw err;
+}
+function loading(t){window.__view='loading';$('sheet').innerHTML=topBar()+'<h2>Buscando…</h2><p>'+esc(t)+'</p>';$('modal').style.display='flex'}
+function paraLugar(e,cidade){
+ const t=e.tags||{};
+ const lat=e.lat!=null?e.lat:(e.center&&e.center.lat),lon=e.lon!=null?e.lon:(e.center&&e.center.lon);
+ const rua=t['addr:street']?t['addr:street']+(t['addr:housenumber']?', '+t['addr:housenumber']:''):'';
+ return {id:e.type+'/'+e.id,name:t.name,kind:kindOf(t),lat,lon,rua,bairro:t['addr:suburb']||t['addr:neighbourhood']||'',addr:addrOf(t),hours:t.opening_hours||'',phone:t.phone||t['contact:phone']||'',site:t.website||t['contact:website']||'',tags:onlyPay(t),cidade,d:null};
+}
+const LIM_CIDADE=400;
+/* Lugares dentro dos limites da cidade (município = admin_level 8), sem vazar para cidades vizinhas */
+async function buscarCidade(pt,cidade,filters,nm,lim){
+ lim=lim||LIM_CIDADE;
+ const ql=`[out:json][timeout:40];is_in(${pt.lat},${pt.lon})->.a;area.a["boundary"="administrative"]["admin_level"="8"]->.c;(`+filters.map(f=>f+nm+'(area.c);').join('')+`);out tags center ${lim};`;
+ let els=(await overpass(ql)).elements||[];
+ if(!els.length&&nm==='["name"]'){
+  const q2='[out:json][timeout:30];('+filters.map(f=>f+nm+`(around:5000,${pt.lat},${pt.lon});`).join('')+`);out tags center ${lim};`;
+  els=(await overpass(q2)).elements||[];
+ }
+ return {itens:els.filter(e=>e.tags&&e.tags.name).map(e=>paraLugar(e,cidade)),cortou:els.length>=lim};
+}
+/* Cidades e vilas próximas, para o modo região */
+async function cidadesProximas(ctx,km){
+ const ql=`[out:json][timeout:30];node["place"~"^(city|town)$"]["name"](around:${km*1000},${ctx.lat},${ctx.lon});out body;`;
+ const els=(await overpass(ql)).elements||[];
+ const norm=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ const cap=km<=30?8:km<=60?14:km<=100?22:30;
+ const lista=els.map(e=>({nome:e.tags.name,lat:e.lat,lon:e.lon,city:e.tags.place==='city',d:dist(ctx.lat,ctx.lon,e.lat,e.lon)})).sort((a,b)=>a.d-b.d);
+ const out=[{nome:ctx.nome,lat:ctx.lat,lon:ctx.lon,d:0}];
+ const jaTem=n=>out.some(o=>norm(o.nome)===norm(n));
+ lista.slice(0,cap).concat(lista.filter(x=>x.city).slice(0,Math.ceil(cap/3))).forEach(c=>{if(!jaTem(c.nome))out.push(c)});
+ return out.sort((a,b)=>a.d-b.d).slice(0,cap);
+}
+async function pool(items,n,fn){
+ const out=[];let i=0;
+ const w=async()=>{while(i<items.length){const k=i++;try{out[k]=await fn(items[k],k)}catch(e){out[k]=null}}};
+ await Promise.all(Array.from({length:Math.min(n,items.length)},w));
+ return out;
+}
+
+async function buscar(cat,opts){
+ if(typeof cat!=='string')cat='';
+ opts=opts||{};
+ const q=$('search').value.trim(),c=$('city').value.trim();
+ if(!c&&!window.__pos){$('city').focus();toast('Digite a cidade ou toque em ◎ para usar sua localização.');return}
+ const btn=document.querySelector('.search button:not(.mic):not(.clear)');
+ if(btn){btn.disabled=true;btn.textContent='Buscando…'}
+ try{
+  const tok=window.__tok=(window.__tok||0)+1;
+  loading('Localizando a cidade…');
+  let ctx;
+  if(window.__pos&&(!c||c===window.__posCity)){
+   ctx={lat:window.__pos.lat,lon:window.__pos.lon,label:window.__posCity||'sua localização',nome:window.__posCity||'Sua cidade'};
+  }else{
+   ctx=await geocodeCity(c);
+   if(!ctx){showSheet('Cidade não encontrada','Confira o nome da cidade e tente de novo.',[{icon:'📍',label:'Digitar outra cidade',action:'choiceCity()'}]);return}
+  }
+  const nome=q.replace(/[^\p{L}\p{N} ]/gu,' ').replace(/\s+/g,' ').trim();
+  const nm=nome?`["name"~"${accentRx(nome)}",i]`:'["name"]';
+  const filters=catFilters(cat);
+  const esc_=window.__escopo;
+  window.__lastCat=cat;window.__lim=0;window.__falhas=0;
+  let itens=[],cortou=false,ordem=[ctx.nome];
+  const montar=(carregando,falhas)=>{
+   itens.forEach(p=>{p.d=p.lat!=null?dist(ctx.lat,ctx.lon,p.lat,p.lon):null});
+   itens.sort((a,b)=>(a.d==null?9e9:a.d)-(b.d==null?9e9:b.d));
+   window.__L={mode:'busca',q,c:ctx.label,cat,list:itens,cortou,ordem,cidade:ctx.nome,carregando,falhas};
+  };
+  if(esc_==='cidade'){
+   loading('Buscando em '+ctx.nome+'…');
+   const r=await buscarCidade(ctx,ctx.nome,filters,nm);
+   if(window.__tok!==tok)return;
+   itens=r.itens;cortou=r.cortou;
+  }else{
+   loading('Procurando cidades a até '+esc_+' km…');
+   const cids=await cidadesProximas(ctx,esc_);
+   if(window.__tok!==tok)return;
+   ordem=cids.map(x=>x.nome);
+   let feitas=0,falhas=0;const seen=new Set();
+   await pool(cids,2,async x=>{
+    let r=null;
+    try{r=await buscarCidade(x,x.nome,filters,nm,nome?400:150)}catch(e){r=null}
+    if(window.__tok!==tok)return;
+    feitas++;
+    if(!r)falhas++;
+    else{if(r.cortou)cortou=true;r.itens.forEach(p=>{if(!seen.has(p.id)){seen.add(p.id);itens.push(p)}})}
+    if(feitas<cids.length&&(window.__view==='lista'||window.__view==='loading')){
+     if(!opts.sortear&&itens.length){montar(feitas+' de '+cids.length,falhas);renderLista()}
+     else loading(`Buscando em ${cids.length} cidades… (${feitas} de ${cids.length})`);
+    }
+   });
+   if(window.__tok!==tok)return;
+   window.__falhas=falhas;
+  }
+  juntarLocais(itens,esc_==='cidade'?[ctx.nome]:ordem,cat,q);
+  montar('',window.__falhas||0);
+  window.__falhas=0;
+  if(opts.sortear){sortear(window.__L.list);return}
+  window.__cand=null;
+  renderLista();
+ }catch(e){
+  showSheet('Pesquisa','Não foi possível consultar os resultados agora. O serviço de mapas pode estar ocupado; verifique sua internet e tente novamente.',[{icon:'🔎',label:'Tentar novamente',action:'abrirBusca()'}]);
+ }finally{if(btn){btn.disabled=false;btn.textContent='Buscar'}}
+}
+function setEscopo(v){window.__escopo=v;LS.set('ted_escopo',v);return buscar(window.__lastCat||'')}
+
+/* ---------- Lista de resultados ---------- */
+function visiveis(list){
+ const card=cardByName(window.__selectedCard);
+ if(!card)return list;
+ let a=list.map(p=>({p,s:estado(p,card).s})).filter(x=>x.s!=='no');
+ if(window.__soConf)a=a.filter(x=>x.s==='yes');
+ a.sort((x,y)=>(y.s==='yes')-(x.s==='yes'));
+ return a.map(x=>x.p);
+}
+function pillsDe(p){
+ const card=cardByName(window.__selectedCard);
+ if(card){
+  const e=estado(p,card);
+  return `<span class="pill ${e.s==='yes'?'yes':''} ${e.src==='me'?'me':''}">${e.s==='yes'?'✓ '+esc(card.n)+(e.n?' ('+esc(e.n)+')':''):'? '+esc(card.n)+' sem informação'}</span>`;
+ }
+ const ok=CARDS.filter(c=>estado(p,c).s==='yes').map(c=>{const e=estado(p,c);return `<span class="pill yes ${e.src==='me'?'me':''}">✓ ${esc(c.n)}${e.n?' ('+esc(e.n)+')':''}</span>`}).concat(extrasDe(p).outros.map(n=>`<span class="pill yes me">✓ ${esc(n)}</span>`));
+ if(!ok.length)return '';
+ let h=ok.slice(0,3).join('');
+ if(ok.length>3)h+=`<span class="pill">+${ok.length-3}</span>`;
+ return h;
+}
+function mostrarResultados(q,c,list){window.__L={mode:'busca',q,c,list,ordem:[],cidade:c};renderLista()}
+function itemHtml(p,i,fav,regional){
+ const sub=[p.kind,p.bairro||(p.rua||'').replace(/,\s*\d+.*$/,'')].filter(Boolean).join(' • ');
+ const pills=pillsDe(p);
+ return `<button class="res" type="button" onclick="abrirLugar(${i})"><div class="n"><b>${esc(p.name)}</b>${p.d!=null&&!fav?'<em>'+fmtDist(p.d)+'</em>':''}</div><div class="sub">${esc(sub)}${fav&&p.cidade?' • '+esc(p.cidade):''}</div>${pills?'<div class="pills">'+pills+'</div>':''}</button>`;
+}
+function renderLista(){
+ const L=window.__L||{mode:'busca',list:[],ordem:[]},card=window.__selectedCard;
+ const fav=L.mode==='fav',regional=!fav&&window.__escopo!=='cidade';
+ const vis=fav?L.list:visiveis(L.list);
+ const base=regional?12:30,lim=window.__lim||base;
+ let h=topBar();
+ h+=`<h2>${fav?'Favoritos':esc(L.cat||'Lugares para comer')}</h2>`;
+ if(!fav){
+  const nc=new Set(vis.map(p=>p.cidade)).size;
+  h+=`<p style="margin:0">${esc(L.c)}${L.q?' • “'+esc(L.q)+'”':''} • ${vis.length} lugar${vis.length===1?'':'es'}${regional&&nc>1?' em '+nc+' cidades':''}</p>`;
+  const sc=window.__escopo,cn=esc(L.cidade||'a cidade');
+  h+=`<div class="seg"><button type="button" class="${sc==='cidade'?'on':''}" onclick="setEscopo('cidade')">Só ${cn}</button>${[30,60,100,150].map(k=>`<button type="button" class="${sc===k?'on':''}" onclick="setEscopo(${k})">${k} km</button>`).join('')}</div>`;
+  if(L.carregando)h+=`<div class="aviso">⏳ Buscando… ${esc(L.carregando)} cidades. Os lugares vão aparecendo conforme cada cidade responde.</div>`;
+  if(L.falhas)h+=`<p style="font-size:11px;margin:8px 0 0">${L.falhas} cidade${L.falhas===1?'':'s'} não respondeu${L.falhas===1?'':'ram'} (o serviço de mapas estava ocupado). Toque de novo na região para tentar outra vez.</p>`;
+  if(card){
+   const cd=cardByName(card),n=L.list.filter(p=>estado(p,cd).s==='yes').length;
+   h+=`<div class="aviso">💳 <strong>${esc(card)}</strong>: ${n} confirmado${n===1?'':'s'}. Os demais estão sem informação; toque no lugar e marque o que souber.</div><button class="tog" type="button" onclick="toggleConf()">${window.__soConf?'Mostrar todos':'Só confirmados'}</button>`;
+  }else if(vis.length){
+   h+='<p style="font-size:11px;margin:8px 0 0">✓ = cartão confirmado pelo mapa ou por você. Sem ✓, toque para conferir.</p>';
+  }
+  if(L.cortou)h+='<p style="font-size:11px;margin:8px 0 0">Cidade grande: mostrando parte dos lugares. Digite o nome do lugar para achar mais rápido.</p>';
+ }
+ const flat=[];let mais=false;
+ if(!vis.length){
+  h+=`<div class="choices"><div class="choice"><span style="margin-right:10px">🔎</span><b>${fav?'Nenhum favorito ainda. Abra um lugar e toque em Favoritar.':'Nenhum lugar encontrado. Tente outro nome, aumente a região ou tire o filtro de cartão.'}</b></div></div>`;
+ }else if(regional){
+  const ordem=(L.ordem||[]).concat(vis.map(p=>p.cidade)).filter((x,i,a)=>a.indexOf(x)===i);
+  ordem.forEach(cn=>{
+   const g=vis.filter(p=>p.cidade===cn);if(!g.length)return;
+   h+=`<div class="grp">${esc(cn)}<span>${g.length} lugar${g.length===1?'':'es'}</span></div><div class="choices" style="margin-top:8px">`;
+   g.slice(0,lim).forEach(p=>{h+=itemHtml(p,flat.length,false,true);flat.push(p)});
+   if(g.length>lim)mais=true;
+   h+='</div>';
+  });
+ }else{
+  h+='<div class="choices">';
+  vis.slice(0,lim).forEach(p=>{h+=itemHtml(p,flat.length,fav,false);flat.push(p)});
+  if(vis.length>lim)mais=true;
+  h+='</div>';
+ }
+ window.__lista=flat;
+ if(mais)h+=`<button class="mais" type="button" onclick="maisItens()">Mostrar mais</button>`;
+ if(!fav){
+  const gm='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent([L.q||L.cat||'restaurantes',L.c].filter(Boolean).join(' em '));
+  h+=`<div class="act"><a href="${gm}" target="_blank" rel="noopener">🗺️ Não achou? Buscar no Google Maps</a></div>`;
+ }
+ h+='<p style="font-size:10px;margin-top:12px">Fonte: OpenStreetMap. Lugares e cartões são informados pela comunidade e por você; confirme no estabelecimento.</p>';
+ window.__view='lista';$('sheet').innerHTML=h;$('modal').style.display='flex';
+}
+function maisItens(){const L=window.__L||{},base=(window.__escopo!=='cidade'&&L.mode!=='fav')?12:30;window.__lim=(window.__lim||base)+base;renderLista()}
+function toggleConf(){window.__soConf=!window.__soConf;renderLista()}
+
+/* ---------- Detalhe do lugar ---------- */
+function abrirLugar(i){const p=(window.__lista||[])[i];if(!p)return;window.__cur=p;renderLugar()}
+function marcar(ci){
+ const p=window.__cur,c=CARDS[ci];if(!p||!c)return;
+ const k=chave(p),m=MARCAS[k]=MARCAS[k]||{},cur=m[c.n];
+ if(!cur)m[c.n]='yes';else if(cur==='yes')m[c.n]='no';else delete m[c.n];
+ if(!Object.keys(m).length)delete MARCAS[k];
+ LS.set('ted_marcas',MARCAS);renderLugar();
+}
+function toggleFav(){
+ const p=window.__cur;if(!p)return;
+ const k=chave(p);if(FAVS[k]){delete FAVS[k];toast('Removido dos favoritos.')}else{FAVS[k]=p;toast('♡ Salvo nos favoritos.')}
+ LS.set('ted_favs',FAVS);renderLugar();
+}
+function extrasDe(p){return EXTRAS[chave(p)]||{outros:[],nota:''}}
+function salvarExtras(p,e){
+ const k=chave(p);
+ if(!e.outros.length&&!e.nota)delete EXTRAS[k];else EXTRAS[k]=e;
+ LS.set('ted_extras',EXTRAS);
+}
+function addExtra(){
+ const p=window.__cur,inp=$('novoCartao');if(!p||!inp)return;
+ const e=extrasDe(p),novos=inp.value.split(/[,;\n]/).map(x=>x.trim().slice(0,30)).filter(Boolean);
+ if(!novos.length){toast('Digite o nome do cartão.');return}
+ const outros=e.outros.slice();
+ novos.forEach(n=>{
+  const ja=outros.some(o=>normNome(o)===normNome(n))||CARDS.some(c=>normNome(c.n)===normNome(n));
+  if(!ja&&outros.length<12)outros.push(n);
+ });
+ salvarExtras(p,{outros,nota:e.nota});toast('Cartão adicionado.');renderLugar();
+}
+function tirarExtra(i){
+ const p=window.__cur;if(!p)return;
+ const e=extrasDe(p),outros=e.outros.filter((_,k)=>k!==i);
+ salvarExtras(p,{outros,nota:e.nota});renderLugar();
+}
+function salvarNota(v){
+ const p=window.__cur;if(!p)return;
+ const e=extrasDe(p);salvarExtras(p,{outros:e.outros.slice(),nota:String(v||'').slice(0,300)});
+}
+function renderLugar(){
+ const p=window.__cur;if(!p)return;
+ const cid=p.cidade||'';
+ const voltar=window.__L?'<button class="close back" type="button" onclick="renderLista()">‹ Voltar</button>':'<b>Tá em dúvida?</b>';
+ let h=`<div class="top">${voltar}<button class="close" type="button" onclick="closeModal()">×</button></div>`;
+ h+=`<h2>${esc(p.name)}</h2><p>${esc(p.kind)}${p.addr?' • '+esc(p.addr):''}${p.cidade?' • '+esc(p.cidade):''}${p.d!=null&&window.__L?' • '+fmtDist(p.d):''}</p>`;
+ if(p.hours)h+=`<p style="margin-top:0;font-size:12px">🕒 Horário informado no mapa: ${esc(p.hours)}</p>`;
+ h+='<div class="secao">Cartões e benefícios</div><div class="chips">';
+ CARDS.forEach((c,ci)=>{
+  const e=estado(p,c),txt=e.s==='yes'?'Aceita':e.s==='no'?'Não aceita':'Sem informação';
+  h+=`<button class="chip ${e.s||''}" type="button" onclick="marcar(${ci})"><span>${c.i}</span><span>${esc(c.n)}<small>${txt}${e.src==='me'?' • marcado por você':e.src==='osm'?' • OpenStreetMap':e.src==='seed'?' • '+(e.n?esc(e.n)+' • ':'')+esc(p.seed.fonteCurta):''}</small></span></button>`;
+ });
+ h+='</div>';
+ if(p.seed)h+=`<p style="font-size:12px">Cadastro: <a href="${esc(p.seed.url)}" target="_blank" rel="noopener">${esc(p.seed.fonteCurta)}</a>, conferido em ${esc(p.seed.data)}.${p.seed.outros?' Também informa: '+esc(p.seed.outros)+'.':''}${Object.keys(p.seed.cartoes||{}).length?'':' A fonte não informa os cartões deste lugar.'}</p>`;
+ if(cartaoGeral(p))h+='<p style="font-size:12px">Este lugar aceita cartão de crédito/débito, mas o mapa não informa as bandeiras.</p>';
+ h+='<p style="font-size:11px">Toque em um cartão para marcar: aceita → não aceita → sem informação. Fica salvo no seu aparelho.</p>';
+ const ex=extrasDe(p);
+ h+='<div class="secao">Outro cartão ou benefício</div><p style="margin:4px 0 0;font-size:12px">Não está na lista acima? Digite o nome (pode separar por vírgula).</p>';
+ if(ex.outros.length)h+='<div class="tags">'+ex.outros.map((n,i)=>`<span class="tag">✓ ${esc(n)}<button type="button" onclick="tirarExtra(${i})" aria-label="Remover ${esc(n)}">✕</button></span>`).join('')+'</div>';
+ h+='<div class="add"><input id="novoCartao" maxlength="60" placeholder="Ex.: Ben, Flash, Cooper" enterkeyhint="done" onkeydown="if(event.key===\'Enter\'){event.preventDefault();addExtra()}"><button type="button" onclick="addExtra()">Adicionar</button></div>';
+ h+='<div class="secao">Anotação</div>';
+ h+=`<textarea class="nota" id="notaLugar" maxlength="300" placeholder="Ex.: só aceita Ticket no almoço; máquina do balcão" oninput="salvarNota(this.value)">${esc(ex.nota)}</textarea>`;
+ const mapQ=encodeURIComponent([p.name,p.addr,cid].filter(Boolean).join(', '));
+ const gq=encodeURIComponent(`${p.name} ${cid} aceita vale refeição alimentação Ticket VR Alelo Pluxee`);
+ const tel=String(p.phone||'').split(';')[0].replace(/[^\d+]/g,'');
+ let site=String(p.site||'').trim();if(site&&!/^https?:\/\//i.test(site))site='https://'+site;
+ if(!/^https?:\/\/[^\s"'<>]+$/i.test(site))site='';
+ const A=(href,txt)=>`<a href="${href}" target="_blank" rel="noopener">${txt}</a>`;
+ h+='<div class="act">'
+  +`<button type="button" onclick="toggleFav()">${FAVS[chave(p)]?'💔 Remover dos favoritos':'♡ Favoritar'}</button>`
+  +A('https://www.google.com/maps/search/?api=1&query='+mapQ,'🗺️ Ver no mapa')
+  +(p.lat!=null?A(`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}`,'🚗 Como chegar'):A('https://www.google.com/maps/dir/?api=1&destination='+mapQ,'🚗 Como chegar'))
+  +(tel?`<a href="tel:${esc(tel)}">📞 Ligar</a>`:'')
+  +(site?A(esc(site),'🌐 Site'):'')
+  +A('https://www.google.com/search?q='+gq,'🔎 Conferir no Google')
+  +(window.__cand?'<button type="button" onclick="sorteio()">🎲 Sortear outro</button>':'')
+  +'</div>';
+ h+='<div class="secao">Conferir na rede oficial</div><p style="margin:4px 0 0;font-size:12px">Nos sites e apps abaixo, procure “Onde usar” ou “Rede credenciada” e busque pelo nome do lugar.</p><div class="act">'
+  +A('https://www.ticket.com.br','🔴 Ticket')+A('https://www.alelo.com.br','🟢 Alelo')+A('https://www.pluxee.com.br','🔵 Pluxee')+A('https://www.vr.com.br','🟠 VR')
+  +'</div>';
+ window.__view='lugar';$('sheet').innerHTML=h;$('modal').style.display='flex';
+}
+
+/* ---------- Escolha por mim ---------- */
+function sortear(list){
+ const card=cardByName(window.__selectedCard);
+ let c=list.filter(p=>!card||estado(p,card).s!=='no');
+ if(card){const sy=c.filter(p=>estado(p,card).s==='yes');if(sy.length)c=sy}
+ if(!c.length){showSheet('Sem opções','Nenhum lugar encontrado com esse filtro. Tente outra cidade ou outro cartão.',[{icon:'📍',label:'Escolher cidade',action:'choiceCity()'}]);return}
+ window.__cand=c;window.__L=null;window.__cur=null;sorteio();
+}
+function sorteio(){
+ const c=window.__cand||[];if(!c.length)return;
+ let p;do{p=c[Math.floor(Math.random()*c.length)]}while(c.length>1&&window.__cur&&p.id===window.__cur.id);
+ window.__lista=[p];window.__cur=p;renderLugar();
+}
+function sortearAgora(){closeModal();buscar('',{sortear:true})}
+
+/* ---------- Favoritos ---------- */
+function favoritos(){window.__L={mode:'fav',list:Object.values(FAVS)};renderLista()}
+
+/* ---------- Voz, localização e filtros ---------- */
+function limparPesquisa(){const input=$('search');input.value='';window.__selectedCard='';renderFiltro();input.focus();toast('Pesquisa apagada.')}
+function renderFiltro(){const c=window.__selectedCard;$('filtro').innerHTML=c?`<span class="fchip">💳 Cartão: <b>${esc(c)}</b><button type="button" onclick="tirarFiltro()" aria-label="Remover filtro">✕</button></span>`:''}
+function tirarFiltro(){window.__selectedCard='';window.__soConf=false;renderFiltro()}
+function falarPesquisa(){
+ const input=$('search'),btn=$('micBtn');
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){input.focus();toast('🎙️ Use o microfone do teclado para falar.');return}
+ if(window.__recognition){try{window.__recognition.stop()}catch(_){}return}
+ const r=new SR();window.__recognition=r;r.lang='pt-BR';r.interimResults=false;r.continuous=false;r.maxAlternatives=1;
+ btn.classList.add('listening');btn.textContent='🔴';toast('🎙️ Pode falar o que procura…');
+ r.onresult=e=>{input.value=(e.results[0][0].transcript||'').trim();input.focus()};
+ r.onerror=e=>toast(e.error==='not-allowed'?'Permita o microfone para pesquisar por voz.':'Não consegui entender. Tente novamente.');
+ r.onend=()=>{btn.classList.remove('listening');btn.textContent='🎙️';window.__recognition=null};
+ try{r.start()}catch(e){r.onend();input.focus()}
+}
+function locationNow(){
+ if(!navigator.geolocation){toast('Localização não disponível.');return}
+ toast('Solicitando localização…');
+ navigator.geolocation.getCurrentPosition(async pos=>{
+  window.__pos={lat:pos.coords.latitude,lon:pos.coords.longitude};window.__posCity='';
+  try{
+   const url=`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&zoom=10&addressdetails=1`;
+   const data=await fetch(url,{headers:{Accept:'application/json'}}).then(r=>r.json());
+   const a=data.address||{};const nome=a.city||a.town||a.municipality||a.village||a.county||'';
+   $('city').value=nome;window.__posCity=nome;toast('📍 Localização encontrada.');
+  }catch(e){toast('Localização recebida, mas não consegui identificar a cidade.')}
+ },()=>toast(location.protocol==='https:'?'Não foi possível acessar sua localização.':'A localização só funciona com o app aberto por um endereço https. Por enquanto, digite a cidade.'),{enableHighAccuracy:true,timeout:15000})
+}
+function cardSearch(card){
+ window.__selectedCard=card||'';window.__soConf=false;closeModal();renderFiltro();
+ if($('city').value.trim()||window.__pos){buscar()}
+ else{$('city').focus();toast(card?`💳 ${card}: digite a cidade para ver onde aceita.`:'📍 Digite a cidade.')}
+}
+function categorySearch(label){closeModal();buscar(label)}
+function choiceCity(){closeModal();$('city').focus();toast('📍 Digite a cidade.')}
+function viagemDestino(){closeModal();$('city').focus();toast('✈️ Digite o destino no campo cidade.')}
+function viagemCartao(){openMenu('cartao')}
+function viagemPesquisar(){closeModal();buscar()}
+
+/* ---------- Mais ---------- */
+function sanit(o){const r={};CARDS.forEach(c=>{if(o[c.n]==='yes'||o[c.n]==='no')r[c.n]=o[c.n]});return r}
+function exportar(){
+ const s=JSON.stringify({v:2,marcas:MARCAS,extras:EXTRAS});
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(s).then(()=>toast('📤 Copiado. Cole numa mensagem para enviar.')).catch(()=>prompt('Copie o texto abaixo:',s));
+ else prompt('Copie o texto abaixo:',s);
+}
+function importar(){
+ const s=prompt('Cole aqui as marcações que você recebeu:');if(!s)return;
+ try{
+  const d=JSON.parse(s);if(!d||typeof d!=='object'||(!d.marcas&&!d.extras))throw new Error('x');d.marcas=(d.marcas&&typeof d.marcas==='object')?d.marcas:{};
+  let n=0;
+  for(const id in d.marcas){const src=d.marcas[id];if(!src||typeof src!=='object')continue;const clean=sanit(src);if(!Object.keys(clean).length)continue;MARCAS[id]=Object.assign(MARCAS[id]||{},clean);n++}
+  if(d.extras&&typeof d.extras==='object'){
+   for(const id in d.extras){
+    const x=d.extras[id];if(!x||typeof x!=='object')continue;
+    const outros=(Array.isArray(x.outros)?x.outros:[]).map(v=>String(v).trim().slice(0,30)).filter(Boolean).slice(0,12);
+    const nota=String(x.nota||'').slice(0,300);
+    const at=EXTRAS[id]||{outros:[],nota:''};
+    outros.forEach(o=>{if(at.outros.length<12&&!at.outros.some(y=>normNome(y)===normNome(o)))at.outros.push(o)});
+    if(!at.nota)at.nota=nota;
+    if(at.outros.length||at.nota){EXTRAS[id]=at;n++}
+   }
+   LS.set('ted_extras',EXTRAS);
+  }
+  LS.set('ted_marcas',MARCAS);toast('📥 '+n+' lugares importados.');
+ }catch(e){toast('Não consegui ler esse texto.')}
+}
+function maisInfo(kind){
+ if(kind==='config')showSheet('Configurações','Suas marcações de cartões e favoritos ficam salvos neste aparelho.',[{icon:'📍',label:'Usar minha localização',action:'locationNow()'},{icon:'📤',label:'Exportar minhas marcações',action:'exportar()'},{icon:'📥',label:'Importar marcações',action:'importar()'},{icon:'🗑️',label:'Limpar pesquisa',action:'limparPesquisa()'}]);
+ if(kind==='about')showSheet('Sobre o aplicativo','<strong>Tá em dúvida? Procure aqui.</strong><br><br>Encontre restaurantes, padarias e mercados perto de você e veja quais cartões e benefícios cada lugar aceita. Os lugares vêm do OpenStreetMap; a aceitação de cartões vem do mapa quando informada e das marcações feitas por você.',[]);
+ if(kind==='terms')showSheet('Termos e privacidade','Usamos fontes públicas (OpenStreetMap) para localizar estabelecimentos. A aceitação de cartões pode mudar e deve ser confirmada no local. O aplicativo não garante que um estabelecimento aceite determinado benefício. Suas marcações e favoritos ficam somente no seu aparelho.',[]);
+}
+function shareApp(){
+ const url=window.location.href.split('#')[0],data={title:'Tá em dúvida? Procure aqui.',text:'Confira este aplicativo:',url};
+ if(navigator.share){navigator.share(data).catch(()=>{})}else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>toast('🔗 Link copiado.')).catch(()=>toast('Não foi possível copiar o link.'))}else toast(url)
+}
+
+function openMenu(type){
+ let title='',text='',items=[];
+ if(type==='comer'){title='Quero comer';text='Escolha o que deseja encontrar. Digite antes a cidade ou use ◎.';items=[['🍽️','Restaurantes',"categorySearch('Restaurantes')"],['🍔','Lanchonetes',"categorySearch('Lanchonetes')"],['🍕','Pizzarias',"categorySearch('Pizzarias')"],['🥖','Padarias',"categorySearch('Padarias')"],['☕','Cafés',"categorySearch('Cafés')"],['🛒','Mercados',"categorySearch('Mercados')"]]}
+ if(type==='cartao'){title='Onde aceita meu cartão?';text='Escolha um cartão, benefício ou bandeira. Os lugares que aceitam aparecem primeiro.';items=[['🔎','Todos os cartões (sem filtro)',"cardSearch('')"]].concat(CARDS.map(c=>[c.i,c.n,`cardSearch('${c.n}')`]))}
+ if(type==='escolha'){title='Escolha por mim';text='Escolha a cidade e, se quiser, o cartão. O app sorteia um lugar perto de você.';items=[['📍','Escolher cidade','choiceCity()'],['💳','Escolher cartão',"openMenu('cartao')"],['🎲','Sortear um lugar','sortearAgora()']]}
+ if(type==='viagem'){title='Vou viajar';text='Consulte estabelecimentos antes de chegar ao destino.';items=[['📍','Escolher destino','viagemDestino()'],['💳','Meu cartão','viagemCartao()'],['🔎','Pesquisar estabelecimentos','viagemPesquisar()']]}
+ if(type==='favoritos'){favoritos();return}
+ if(type==='mais'){title='Mais opções';text='Configurações e informações do aplicativo.';items=[['🔗','Compartilhar aplicativo','shareApp()'],['⚙️','Configurações',"maisInfo('config')"],['ℹ️','Sobre o aplicativo',"maisInfo('about')"],['🔒','Termos e privacidade',"maisInfo('terms')"]]}
+ const rows=items.map(x=>`<button class="choice" type="button" onclick="${x[2]}"><span style="margin-right:10px">${x[0]}</span><b>${esc(x[1])}</b><span>›</span></button>`).join('');
+ window.__view='outro';$('sheet').innerHTML=`${topBar()}<h2>${esc(title)}</h2><p>${text}</p><div class="choices">${rows}</div>`;
+ $('modal').style.display='flex';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.id==='search'||e.target.id==='city'))buscar()});
+</script>
+<script>
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(()=>{})); }
+</script>
+</body>
+</html>
