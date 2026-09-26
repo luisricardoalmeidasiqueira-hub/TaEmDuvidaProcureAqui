@@ -1001,8 +1001,14 @@ renderLoc();renderFiltros();renderRes();atualizarMapa();
 })();
 </script>
 <script>
-const APP_VERSAO='2.6';
+const APP_VERSAO='2.7';
 document.getElementById('verApp').textContent=APP_VERSAO;
+/* Avisa quando o app abriu numa versão nova */
+try{
+ const vista=localStorage.getItem('ted_versao');
+ if(vista&&vista!==APP_VERSAO)setTimeout(()=>toast('✨ App atualizado para a versão '+APP_VERSAO),800);
+ localStorage.setItem('ted_versao',APP_VERSAO);
+}catch(e){}
 function avisarNovaVersao(){document.getElementById('novaVersao').hidden=false}
 if('serviceWorker' in navigator){
  window.addEventListener('load',()=>{
